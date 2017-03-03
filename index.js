@@ -5,7 +5,7 @@
 'use strict'
 const aerospikeModel = require('./source/model/aerospike')
 const aerospikeRoutes = require('./source/route/aerospikeRoute')
-const promise = require('bluebird')
+const co = require('co')
 
 /**
  * creates the aerospike specific endpoints which can be added to hapi server
@@ -13,7 +13,7 @@ const promise = require('bluebird')
  * @param aerospikeHosts
  * @param aeropsikePort
  */
-const getAerospikeEndpoints = promise.coroutine(function* (prefixPath, aerospikeHosts, aeropsikePort) {
+const getAerospikeEndpoints = co.wrap(function* (prefixPath, aerospikeHosts, aeropsikePort) {
   yield aerospikeModel.connect(aerospikeHosts, aeropsikePort)
   return aerospikeRoutes.getRoutes(prefixPath)
 })
