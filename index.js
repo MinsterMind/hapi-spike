@@ -5,18 +5,21 @@
 'use strict'
 const aerospikeModel = require('./source/model/aerospike')
 const aerospikeRoutes = require('./source/route/aerospikeRoute')
-const co = require('co')
 
 /**
  * creates the aerospike specific endpoints which can be added to hapi server
  * @param prefixPath
- * @param aerospikeHosts
- * @param aeropsikePort
+ * @param aerospikeClient
  */
-const getAerospikeEndpoints = co.wrap(function* (prefixPath, aerospikeHosts, aeropsikePort) {
-  yield aerospikeModel.connect(aerospikeHosts, aeropsikePort)
+const getAerospikeEndpoints = function (prefixPath, aerospikeClient) {
+  if (aerospikeClient) {
+    aerospikeModel.setAerospikeClient(aerospikeClient)
+  } else {
+    aerospikeModel.connect()
+  }
   return aerospikeRoutes.getRoutes(prefixPath)
-})
+}
+
 
 module.exports = {
   getAerospikeEndpoints

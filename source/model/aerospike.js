@@ -10,7 +10,7 @@ const _ = require('lodash')
 
 let client
 
-const connect = function* (host, port) {
+const connect = function (host, port) {
   if(_.isEmpty(host)) {
     host = process.env.AEROSPIKE_HOST || 'localhost'
   }
@@ -31,7 +31,13 @@ const connect = function* (host, port) {
       timeout: 100000
     }
   }))
-  yield client.connectAsync()
+  client.connect(function (err) {
+    if(!err) {
+      console.log('Hapispike connected with default configuration')
+    } else {
+      console.error(`Hapispike could not connect, Error: ${err}`)
+    }
+  })
 }
 
 /**
@@ -57,8 +63,14 @@ const getNameSpaces = function* () {
  * @private
  */
 const _parseSets = function (namespace, infoString) {
-  const sets = infoString.split(`${namespace}:set=`)
+  let sets = infoString.split(`${namespace}:set=`)
   sets.shift()
+
+  if (sets.length == 0) {
+    sets = infoString.split(`${namespace}:set_name=`)
+    sets.shift()
+  }
+
   return _.map(sets, function (set) {
     return set.split(':')[0]
   })
@@ -85,9 +97,18 @@ const getRecord = function* (namespace, set, key) {
   return yield client.getAsync(spikeKey)
 }
 
+/**
+ * set the aerospike client as passed by the user
+ * @param aerospikeClient
+ */
+const setAerospikeClient = function (aerospikeClient) {
+  client = promise.promisifyAll(aerospikeClient)
+}
+
 
 module.exports = {
   connect,
+  setAerospikeClient,
   getNameSpaces,
   getSets,
   getRecord

@@ -15,7 +15,9 @@ module.exports = {
 
   getRecord: {
     query: {
-      namespace: joi.string().required()
+      namespace: joi.string().required(),
+      set: joi.string().required(),
+      key: joi.string().required()
     }
   }
 }
