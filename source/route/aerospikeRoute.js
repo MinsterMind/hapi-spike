@@ -9,7 +9,7 @@ const validations = require('./aerospikeValidations')
 const co = require('co')
 
 const getRoutes = function (prefixPath) {
-  const routes = [
+  return [
     {
       method: 'GET',
       path: `${prefixPath}/aerospike/namespaces`,
@@ -18,16 +18,20 @@ const getRoutes = function (prefixPath) {
     {
       method: 'GET',
       path: `${prefixPath}/aerospike/sets`,
-      handler: co.wrap(aerospikeHandler.getSets)
+      handler: co.wrap(aerospikeHandler.getSets),
+      config: {
+        validate: validations.getSets
+      }
     },
     {
       method: 'GET',
       path: `${prefixPath}/aerospike/record`,
-      handler: co.wrap(aerospikeHandler.getRecord)
+      handler: co.wrap(aerospikeHandler.getRecord),
+      config: {
+        validate: validations.getRecord
+      }
     }
   ]
-
-  return routes
 }
 
 module.exports = {
