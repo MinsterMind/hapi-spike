@@ -10,6 +10,9 @@ module.exports = {
   getSets: {
     query: {
       namespace: joi.string().required()
+    },
+    options: {
+      allowUnknown: true
     }
   },
 
@@ -18,6 +21,9 @@ module.exports = {
       namespace: joi.string().required(),
       set: joi.string().required(),
       key: joi.string().required()
+    },
+    options: {
+      allowUnknown: true
     }
   }
 }
