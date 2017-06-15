@@ -1,6 +1,6 @@
 {
   "name": "hapi-spike",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "creates the endpoint where you can monitor provided aerospike database",
   "main": "index.js",
   "scripts": {
