@@ -4,9 +4,10 @@
 
 'use strict'
 
-const aerospike = require('../model/aerospike')
 const boom = require('boom')
+const fs = require('fs')
 
+const aerospike = require('../model/aerospike')
 
 const getNameSpaces = function* (req, res) {
   try {
@@ -39,9 +40,18 @@ const getRecord = function* (req, res) {
   }
 }
 
+const adminPanel = function* (req, res) {
+  try {
+    res.view('aerospike')
+  } catch (ex) {
+    res(boom.wrap(ex, 400, ex.message))
+  }
+}
+
 
 module.exports = {
   getNameSpaces,
   getSets,
-  getRecord
+  getRecord,
+  adminPanel
 }
