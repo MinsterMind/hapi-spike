@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <title>{{title}}</title>
+</head>
+<body>
+<div id="adminbody">
+<select id="sampleSelect">
+    <option selected="true" disabled="disabled" value="select namespace">select namespace</option>
+</select>
+</div>
+
+<script>
+    var a = $("#sampleSelect")
+    var namespaceurl = '{{namespaceurl}}'
+    fetch(namespaceurl).then(res => res.json())
+      .then(function(data) {
+        data.forEach(function(namespace) {
+          a.append(new Option(namespace, namespace))
+        })
+      })
+    var adminbody = $("#adminbody")
+    var setDropdown = $('#setDropdown')
+
+    a.change(function() {
+      var namespace = a.val()
+      fetch('{{seturl}}' + '?namespace=' + namespace).then(res => res.json())
+        .then(function(data) {
+          if(setDropdown.length === 0) {
+            setDropdown = $('<select/>', {id:'setDropdown'})
+            adminbody.append(setDropdown)
+            setDropdown.change(selectSet)
+          }
+          setDropdown.empty()
+          setDropdown.append($('<option/>', {selected: "true", disabled: "disabled",value:"select", text: "select set"}))
+          data.forEach(function(set) {
+            setDropdown.append(new Option(set, set))
+          })
+        })
+    })
+
+    var keyLable = $('#keyLable')
+    var keyInputText = $('#keyText')
+    var submitButton = $('#submit')
+
+
+    var selectSet = function () {
+      if (keyLable.length === 0 ) {
+        keyLable = $('<lable/>', {id: 'keyLable', text: 'Key: '})
+        adminbody.append(keyLable)
+      }
+      if (keyInputText.length === 0) {
+        keyInputText = $('<input/>', {type: 'text', id: 'keyText', placeholder: 'enter key for record'})
+        adminbody.append(keyInputText)
+      }
+      if (submitButton.length === 0) {
+        submitButton = $('<button/>', {type: 'button', id: 'submit', html: 'Submit'})
+        adminbody.append(submitButton)
+        submitButton.click(getRecord)
+      }
+    }
+
+    var getRecord = function () {
+      var namespace = a.val()
+      var set = setDropdown.val()
+      var key = keyInputText.val()
+      fetch('{{recordurl}}' + '?namespace=' + namespace + '&set='+ set + '&key=' + key)
+        .then(function(res){ return res.json()})
+        .then(function (res) {
+
+          var resultArea = $("#record")
+          if (resultArea.length === 0) {
+            resultArea = $('<textarea/>', {id: 'record', rows: 40, cols: 150})
+            adminbody.append(resultArea)
+          }
+          resultArea.val(JSON.stringify(res, undefined, 4))
+        }).catch(function(res) {
+          alert(JSON.stringify(res))
+      })
+    }
+</script>
+</body>
+</html>

@@ -22,10 +22,14 @@
   "homepage": "https://github.com/MinsterMind/hapi-spike#readme",
   "dependencies": {
     "aerospike": "^2.4.4",
-    "bluebird": "^3.4.7",
+    "bluebird": "^3.5.0",
     "boom": "^4.2.0",
     "co": "^4.6.0",
+    "handlebars": "^4.0.10",
+    "hapi": "^16.4.3",
     "joi": "^10.2.2",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "path": "^0.12.7",
+    "vision": "^4.1.1"
   }
 }

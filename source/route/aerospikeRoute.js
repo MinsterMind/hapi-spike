@@ -30,6 +30,20 @@ const getRoutes = function (prefixPath) {
       config: {
         validate: validations.getRecord
       }
+    },
+    {
+      method: 'GET',
+      path: `${prefixPath}/aerospike/admin-panel`,
+      handler: {
+        view: {
+          template: 'aerospike',
+          context: {
+            namespaceurl: `${prefixPath}/aerospike/namespaces`,
+            seturl: `${prefixPath}/aerospike/sets`,
+            recordurl: `${prefixPath}/aerospike/record`
+          }
+        }
+      }//co.wrap(aerospikeHandler.adminPanel),
     }
   ]
 }

@@ -3,6 +3,7 @@
  */
 
 'use strict'
+const path = require('path')
 const aerospikeModel = require('./source/model/aerospike')
 const aerospikeRoutes = require('./source/route/aerospikeRoute')
 
@@ -11,13 +12,25 @@ const aerospikeRoutes = require('./source/route/aerospikeRoute')
  * @param prefixPath
  * @param aerospikeClient
  */
-const getAerospikeEndpoints = function (prefixPath, aerospikeClient) {
+const getAerospikeEndpoints = function (hapiServer, prefixPath, aerospikeClient) {
   if (aerospikeClient) {
     aerospikeModel.setAerospikeClient(aerospikeClient)
   } else {
     aerospikeModel.connect()
   }
-  return aerospikeRoutes.getRoutes(prefixPath)
+
+  hapiServer.register(require('vision'), function (err) {
+    hapiServer.views({
+      engines: {
+        html: require('handlebars')
+      },
+      relativeTo: path.resolve(__dirname, './source'),
+      path: 'views'
+    })
+
+    hapiServer.route(aerospikeRoutes.getRoutes(prefixPath))
+  })
+
 }
 
 
